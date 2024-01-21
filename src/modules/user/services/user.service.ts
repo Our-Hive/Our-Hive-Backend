@@ -10,7 +10,7 @@ export class UserService {
     return;
   }
 
-  async getUserByNickname() {
+  async getUserByUsername() {
     return;
   }
 
