@@ -33,10 +33,6 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({ where: { email } });
 
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
-
       return user;
     } catch (error) {
       console.error(error);
@@ -47,10 +43,6 @@ export class UserService {
   async getUserByUsername(username: string) {
     try {
       const user = await this.userRepository.findOne({ where: { username } });
-
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
 
       return user;
     } catch (error) {
