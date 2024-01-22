@@ -1,20 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
+import { SignupRequestDto } from '../dtos/signup.request.dto';
 
 @Injectable()
 export class UserService {
-  async getUserById() {
-    return;
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+
+  async getUserById(id: number): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  async getUserByEmail() {
-    return;
+  async getUserByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  async getUserByUsername() {
-    return;
+  async getUserByUsername(username: string) {
+    try {
+      const user = await this.userRepository.findOne({ where: { username } });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
-  async createUser() {
-    return;
+  async createUser(user: SignupRequestDto) {
+    try {
+      const newUser = await this.userRepository.save(user);
+
+      if (!newUser) {
+        throw new InternalServerErrorException('Error creating user');
+      }
+
+      return newUser;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }
