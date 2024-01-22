@@ -1,11 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Redirect } from '@nestjs/common';
 
-@Controller()
+@Controller('/')
 export class AppController {
   constructor() {}
 
   @Get()
-  getHello(): string {
-    return 'Hello World!';
+  @Redirect('http://localhost:3000/api')
+  redirect() {
+    return { url: 'http://localhost:3000/api' };
   }
 }
