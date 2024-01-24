@@ -1,8 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
 import { SignupRequestDto } from '../../user/dtos/signup.request.dto';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { SignupResponseDto } from '../../user/dtos/signup.response.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -35,5 +36,25 @@ export class AuthService {
       username: createdUser.username,
       email: createdUser.email,
     };
+  }
+
+  generateJwt(user: User) {
+    return { message: 'Login Works', user };
+  }
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    return user;
   }
 }
