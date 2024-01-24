@@ -1,13 +1,19 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserService } from '../../user/services/user.service';
-import { SignupRequestDto } from '../../user/dtos/signup.request.dto';
+import { SignupRequestDto } from '../dtos/signup.request.dto';
 import { hash, compare } from 'bcrypt';
-import { SignupResponseDto } from '../../user/dtos/signup.response.dto';
+import { SignupResponseDto } from '../dtos/signup.response.dto';
 import { User } from 'src/modules/user/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
+import { LoginResponseDto } from '../dtos/login.response.dto';
+import { PayloadToken } from '../models/token.model';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signup(signupDto: SignupRequestDto): Promise<SignupResponseDto> {
     const emailExists = await this.userService.getUserByEmail(signupDto.email);
@@ -35,11 +41,14 @@ export class AuthService {
       id: createdUser.id,
       username: createdUser.username,
       email: createdUser.email,
+      access_token: this.generateJwt(createdUser).access_token,
     };
   }
 
-  generateJwt(user: User) {
-    return { message: 'Login Works', user };
+  generateJwt(user: User): LoginResponseDto {
+    const payload: PayloadToken = { sub: user.id };
+
+    return { access_token: this.jwtService.sign(payload) };
   }
 
   async validateUser(email: string, password: string): Promise<User> {
