@@ -5,8 +5,9 @@ import {
   MinLength,
   IsEmail,
   IsPhoneNumber,
-  IsDate,
+  IsDateString,
 } from 'class-validator';
+import { IsPastDate } from '../decorators/isPastDate.validator';
 
 export class SignupRequestDto {
   @ApiProperty({
@@ -39,19 +40,22 @@ export class SignupRequestDto {
   password: string;
 
   @ApiProperty({
-    example: '1990-01-01',
+    example: '2024-02-20',
     required: true,
     description: 'User birth date',
   })
-  @IsDate()
+  @IsDateString()
+  @IsPastDate()
   birthDate: Date;
 
   @ApiProperty({
-    example: '1234567890',
+    example: '+573118617627',
     required: true,
-    description: 'User mobile number',
+    description: 'User mobile number, must be a valid colombian mobile number',
   })
-  @IsPhoneNumber()
+  @IsPhoneNumber('CO', {
+    message: 'mobileNumber must be a valid colombian mobile number',
+  })
   mobileNumber: string;
 
   @ApiProperty({
