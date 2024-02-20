@@ -54,6 +54,19 @@ export class UserService {
     }
   }
 
+  async getUserByMobileNumber(mobileNumber: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { mobileNumber },
+      });
+
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async createUser(user: SignupRequestDto) {
     try {
       const newUser = await this.userRepository.save(user);

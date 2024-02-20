@@ -27,7 +27,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.CONFLICT,
-    description: 'Email or Username already exists',
+    description: 'Email, Username or Mobile Number already exists',
   })
   @Post('signup')
   async signup(@Body() signupDto: SignupRequestDto) {
