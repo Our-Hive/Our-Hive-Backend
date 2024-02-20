@@ -16,19 +16,7 @@ export class AuthService {
   ) {}
 
   async signup(signupDto: SignupRequestDto): Promise<SignupResponseDto> {
-    const emailExists = await this.userService.getUserByEmail(signupDto.email);
-
-    if (emailExists) {
-      throw new ConflictException('Email already exists');
-    }
-
-    const usernameExists = await this.userService.getUserByUsername(
-      signupDto.username,
-    );
-
-    if (usernameExists) {
-      throw new ConflictException('Username already exists');
-    }
+    await this.validateUserFields(signupDto);
 
     const encryptedPassword = await hash(signupDto.password, 10);
 
@@ -43,6 +31,30 @@ export class AuthService {
       email: createdUser.email,
       access_token: this.generateJwt(createdUser).access_token,
     };
+  }
+
+  async validateUserFields(signupDto: SignupRequestDto): Promise<void> {
+    const emailExists = await this.userService.getUserByEmail(signupDto.email);
+
+    if (emailExists) {
+      throw new ConflictException('Email already exists');
+    }
+
+    const usernameExists = await this.userService.getUserByUsername(
+      signupDto.username,
+    );
+
+    if (usernameExists) {
+      throw new ConflictException('Username already exists');
+    }
+
+    const mobileNumberExists = await this.userService.getUserByMobileNumber(
+      signupDto.mobileNumber,
+    );
+
+    if (mobileNumberExists) {
+      throw new ConflictException('Mobile number already exists');
+    }
   }
 
   generateJwt(user: User): LoginResponseDto {
