@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { IsPastDate } from 'src/modules/auth/decorators/isPastDate.validator';
 
-export class UpdateUserDto {
+export class UpdateUserRequestDto {
   @ApiProperty({
     example: 'username',
     required: false,
