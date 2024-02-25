@@ -7,7 +7,6 @@ import {
   IsPhoneNumber,
   IsDateString,
 } from 'class-validator';
-import { IsPastDate } from '../decorators/isPastDate.validator';
 
 export class SignupRequestDto {
   @ApiProperty({
@@ -45,7 +44,6 @@ export class SignupRequestDto {
     description: 'User birth date',
   })
   @IsDateString()
-  @IsPastDate()
   birthDate: Date;
 
   @ApiProperty({

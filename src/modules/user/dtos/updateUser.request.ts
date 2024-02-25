@@ -8,7 +8,6 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { IsPastDate } from 'src/modules/auth/decorators/isPastDate.validator';
 
 export class UpdateUserRequestDto {
   @ApiProperty({
@@ -50,6 +49,5 @@ export class UpdateUserRequestDto {
   })
   @IsOptional()
   @IsDateString()
-  @IsPastDate()
   birthdate?: Date;
 }
