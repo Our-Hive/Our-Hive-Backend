@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +10,8 @@ import { User } from '../entities/user.entity';
 import { SignupRequestDto } from '../../auth/dtos/signup.request.dto';
 import { UpdateUserRequestDto } from '../dtos/updateUser.request';
 import { UpdateUserResponseDto } from '../dtos/updateUser.response';
+import { compare } from 'bcrypt';
+import { DeactivateUserRequestDto } from '../dtos/deactivateUser.request';
 
 @Injectable()
 export class UserService {
@@ -108,6 +111,33 @@ export class UserService {
         mobileNumber: mobileNumber,
         birthdate: birthDate,
       };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async deactivateUser(id: number, loggedUser: DeactivateUserRequestDto) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const isPasswordValid = await compare(loggedUser.password, user.password);
+
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid password');
+      }
+
+      const result = await this.userRepository.softDelete(id);
+
+      if (result.affected === 0) {
+        throw new InternalServerErrorException('Error deactivating user');
+      }
     } catch (error) {
       console.error(error);
       throw error;

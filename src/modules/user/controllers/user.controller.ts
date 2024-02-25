@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 import {
   ApiBearerAuth,
@@ -11,6 +21,7 @@ import { UserService } from '../services/user.service';
 import { Request } from 'express';
 import { PayloadToken } from 'src/modules/auth/models/token.model';
 import { UpdateUserRequestDto } from '../dtos/updateUser.request';
+import { DeactivateUserRequestDto } from '../dtos/deactivateUser.request';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('User')
@@ -20,8 +31,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get logged user info' })
-  @ApiResponse({ status: 200, description: 'User found' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'User found' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @Get()
   async getUserById(@Req() req: Request) {
@@ -31,8 +42,8 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Update logged user info' })
-  @ApiResponse({ status: 200, description: 'User updated' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'User updated' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @Patch()
   async updateUser(
@@ -42,5 +53,23 @@ export class UserController {
     const { sub } = req.user as PayloadToken;
 
     return this.userService.updateUser(sub, updateUserData);
+  }
+
+  @ApiOperation({ summary: 'Deactivate logged user' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'User deactivated',
+  })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
+  @ApiHeader({ name: 'Authorization', description: 'Auth token' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete()
+  async deactivateUser(
+    @Req() req: Request,
+    @Body() deactivateUserData: DeactivateUserRequestDto,
+  ) {
+    const { sub } = req.user as PayloadToken;
+
+    return this.userService.deactivateUser(sub, deactivateUserData);
   }
 }
