@@ -55,6 +55,13 @@ export class UserController {
     return this.userService.updateUser(sub, updateUserData);
   }
 
+  @ApiOperation({ summary: 'Deactivate logged user' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'User deactivated',
+  })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
+  @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete()
   async deactivateUser(
