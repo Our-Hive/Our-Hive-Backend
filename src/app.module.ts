@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDatabaseConfig } from './configs/dbConfig';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { EmotionModule } from './modules/emotion/emotion.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TypeOrmModule.forRoot(getDatabaseConfig()),
     UserModule,
     AuthModule,
+    EmotionModule,
   ],
   controllers: [AppController],
 })
