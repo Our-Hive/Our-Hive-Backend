@@ -10,8 +10,9 @@ import { User } from '../entities/user.entity';
 import { SignupRequestDto } from '../../auth/dtos/signup.request.dto';
 import { UpdateUserRequestDto } from '../dtos/updateUser.request';
 import { UpdateUserResponseDto } from '../dtos/updateUser.response';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { DeactivateUserRequestDto } from '../dtos/deactivateUser.request';
+import { UserRole } from '../entities/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -138,6 +139,36 @@ export class UserService {
       if (result.affected === 0) {
         throw new InternalServerErrorException('Error deactivating user');
       }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async ensureAdminExists() {
+    try {
+      const admin = await this.userRepository.findOne({
+        where: { role: UserRole.ADMIN },
+      });
+
+      if (admin) {
+        return true;
+      }
+
+      const password = await hash('admin', 10);
+
+      await this.userRepository.save({
+        username: 'admin',
+        firstName: 'Admin',
+        lastName: 'Admin',
+        role: UserRole.ADMIN,
+        email: 'admin@email.com',
+        birthDate: new Date('1990-01-01'),
+        mobileNumber: '+573111111111',
+        password,
+      });
+
+      return false;
     } catch (error) {
       console.error(error);
       throw error;
