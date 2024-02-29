@@ -1,8 +1,30 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { PrimaryEmotionService } from '../services/primaryEmotion.service';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CreatePrimaryEmotionRequest } from '../dtos/createPrimaryEmotion.request';
+import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
+import { RolesGuard } from '../../auth/guards/role.guard';
+import { Roles } from 'src/modules/auth/decorators/role.decorator';
+import { UserRole } from 'src/modules/user/entities/enums/role.enum';
 
 @ApiTags('emotions')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('emotions')
 export class EmotionController {
   constructor(private readonly primaryEmotionService: PrimaryEmotionService) {}
@@ -25,11 +47,11 @@ export class EmotionController {
     description: 'The name of the primary emotion',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'The primary emotion has been successfully retrieved',
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatus.NOT_FOUND,
     description: 'The primary emotion was not found',
   })
   @Get('/primary/:name')
@@ -37,18 +59,19 @@ export class EmotionController {
     return await this.primaryEmotionService.getEmotionByName(name);
   }
 
-  // @ApiOperation({ summary: 'Create a primary emotion' })
-  // @ApiResponse({
-  //   status: HttpStatus.CREATED,
-  //   description: 'The primary emotion has been successfully created',
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.BAD_REQUEST,
-  //   description: 'The request is invalid',
-  // })
-  // @HttpCode(HttpStatus.CREATED)
-  // @Post()
-  // async createEmotion(@Body() body: CreatePrimaryEmotionRequest) {
-  //   return await this.primaryEmotionService.createEmotion(body);
-  // }
+  @ApiOperation({ summary: 'Create a primary emotion' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The primary emotion has been successfully created',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'The request is invalid',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post('/primary')
+  @Roles(UserRole.ADMIN)
+  async createEmotion(@Body() body: CreatePrimaryEmotionRequest) {
+    return await this.primaryEmotionService.createEmotion(body);
+  }
 }
