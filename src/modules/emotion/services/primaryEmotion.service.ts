@@ -44,9 +44,14 @@ export class PrimaryEmotionService {
     }
   }
 
-  async createEmotion(emotion: CreatePrimaryEmotionRequest) {
+  async createPrimaryEmotion(emotion: CreatePrimaryEmotionRequest) {
     try {
       emotion.name = emotion.name.toLowerCase();
+
+      for (const secondaryEmotion of emotion.secondaryEmotions) {
+        secondaryEmotion.name = secondaryEmotion.name.toLowerCase();
+      }
+
       const createdEmotion = await this.emotionRepository.save(emotion);
 
       if (!createdEmotion) {

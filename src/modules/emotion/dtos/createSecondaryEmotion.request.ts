@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Theme } from '../entities/enums/theme.enum';
 import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 
-export class AddSecondaryEmotionRequest {
+export class CreateSecondaryEmotionRequest {
   @ApiProperty({
     example: 'Joy',
     required: true,
