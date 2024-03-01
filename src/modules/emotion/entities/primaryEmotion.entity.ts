@@ -19,6 +19,9 @@ export class PrimaryEmotion {
   @OneToMany(
     () => SecondaryEmotion,
     (secondaryEmotion) => secondaryEmotion.primaryEmotion,
+    {
+      cascade: true,
+    },
   )
   secondaryEmotions: SecondaryEmotion[];
 

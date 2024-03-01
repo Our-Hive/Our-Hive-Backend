@@ -31,7 +31,7 @@ export class SecondaryEmotion {
     () => PrimaryEmotion,
     (primaryEmotion) => primaryEmotion.secondaryEmotions,
   )
-  primaryEmotion: PrimaryEmotion;
+  primaryEmotion: string;
 
   @CreateDateColumn()
   createdAt: Date;
