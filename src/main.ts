@@ -7,7 +7,13 @@ import { UserService } from './modules/user/services/user.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      stopAtFirstError: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Our Hive')
