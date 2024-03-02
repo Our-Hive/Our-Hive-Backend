@@ -35,7 +35,7 @@ export class UserController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @Get()
-  async getUserById(@Req() req: Request) {
+  async getUser(@Req() req: Request) {
     const { sub } = req.user as PayloadToken;
 
     return this.userService.getUserById(sub);
