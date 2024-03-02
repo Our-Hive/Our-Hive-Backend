@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Theme } from '../entities/enums/theme.enum';
-import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateSecondaryEmotionRequest {
   @ApiProperty({
@@ -35,6 +35,7 @@ export class CreateSecondaryEmotionRequest {
     required: true,
     description: 'The theme of the secondary emotion',
   })
+  @IsEnum(Theme)
   @IsNotEmpty()
   theme: Theme;
 
