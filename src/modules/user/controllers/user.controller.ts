@@ -25,15 +25,15 @@ import { DeactivateUserRequestDto } from '../dtos/deactivateUser.request';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('User')
-@ApiBearerAuth()
+@ApiBearerAuth('JWT')
 @Controller('users')
+@ApiHeader({ name: 'Authorization', description: 'Auth token' })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Get logged user info' })
   @ApiResponse({ status: HttpStatus.OK, description: 'User found' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
-  @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @Get()
   async getUser(@Req() req: Request) {
     const { sub } = req.user as PayloadToken;
@@ -44,7 +44,6 @@ export class UserController {
   @ApiOperation({ summary: 'Update logged user info' })
   @ApiResponse({ status: HttpStatus.OK, description: 'User updated' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
-  @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @Patch()
   async updateUser(
     @Req() req: Request,
@@ -61,7 +60,6 @@ export class UserController {
     description: 'User deactivated',
   })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
-  @ApiHeader({ name: 'Authorization', description: 'Auth token' })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete()
   async deactivateUser(

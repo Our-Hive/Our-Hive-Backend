@@ -12,6 +12,7 @@ import { PrimaryEmotionService } from '../services/primaryEmotion.service';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiHeader,
   ApiParam,
   ApiResponse,
   ApiTags,
@@ -25,9 +26,10 @@ import { SecondaryEmotionService } from '../services/secondaryEmotion.service';
 import { CreateSecondaryEmotionRequest } from '../dtos/createSecondaryEmotion.request';
 
 @ApiTags('emotions')
-@ApiBearerAuth()
+@ApiBearerAuth('JWT')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('emotions')
+@ApiHeader({ name: 'Authorization', description: 'Auth token' })
 export class EmotionController {
   constructor(
     private readonly primaryEmotionService: PrimaryEmotionService,

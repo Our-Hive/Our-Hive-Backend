@@ -20,6 +20,14 @@ async function bootstrap() {
     .setDescription('Our Hive API description')
     .setVersion('1.0')
     .addTag('our-hive')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'JWT',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
