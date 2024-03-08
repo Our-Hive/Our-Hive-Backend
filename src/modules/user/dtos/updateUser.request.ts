@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDateString,
-  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -20,16 +19,6 @@ export class UpdateUserRequestDto {
   @IsNotEmpty()
   @MinLength(3)
   username?: string;
-
-  @ApiProperty({
-    example: 'example@gmail.com',
-    required: false,
-    description: 'User email',
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsEmail()
-  email?: string;
 
   @ApiProperty({
     example: '+573118617627',
