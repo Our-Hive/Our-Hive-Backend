@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { SecondaryEmotion } from './secondaryEmotion.entity';
+import { DailyRecord } from 'src/modules/emotional-record/entities/daily-record.entity';
 
 @Entity({ name: 'primary_emotions' })
 export class PrimaryEmotion {
@@ -24,6 +25,11 @@ export class PrimaryEmotion {
     },
   )
   secondaryEmotions: SecondaryEmotion[];
+
+  @OneToMany(() => DailyRecord, (dailyRecord) => dailyRecord.primaryEmotion, {
+    cascade: true,
+  })
+  dailyRecords: DailyRecord[];
 
   @CreateDateColumn()
   createdAt: Date;
