@@ -19,5 +19,12 @@ export class CreateDailyRecordRequest {
   @IsString()
   @IsNotEmpty()
   secondaryEmotion: string;
+
+  @ApiProperty({
+    example: 'Today was a great day! I felt so happy and content.',
+    required: true,
+    description:
+      'The description of the daily record, the user can write anything about his day here.',
+  })
   description: string;
 }

@@ -1,3 +1,4 @@
+import { SecondaryEmotion } from 'src/modules/emotion/entities/secondaryEmotion.entity';
 import { PrimaryEmotion } from '../../emotion/entities/primaryEmotion.entity';
 import {
   Column,
@@ -16,6 +17,12 @@ export class DailyRecord {
 
   @ManyToOne(() => PrimaryEmotion, (primaryEmotion) => primaryEmotion.name)
   primaryEmotion: string;
+
+  @ManyToOne(
+    () => SecondaryEmotion,
+    (secondaryEmotion) => secondaryEmotion.dailyRecords,
+  )
+  secondaryEmotion: string;
 
   @Column('varchar', { length: 255 })
   description: string;
