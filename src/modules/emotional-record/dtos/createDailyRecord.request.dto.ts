@@ -26,5 +26,7 @@ export class CreateDailyRecordRequest {
     description:
       'The description of the daily record, the user can write anything about his day here.',
   })
+  @IsString()
+  @IsNotEmpty()
   description: string;
 }
