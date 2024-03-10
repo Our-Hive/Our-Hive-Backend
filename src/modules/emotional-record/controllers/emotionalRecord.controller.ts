@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiHeader,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -41,7 +44,7 @@ export class EmotionalRecordController {
     status: HttpStatus.BAD_REQUEST,
     description: 'Invalid secondary emotion for primary emotion',
   })
-  @Post('daily-record')
+  @Post('daily')
   @HttpCode(HttpStatus.CREATED)
   async createDailyRecord(
     @Req() req: Request,
@@ -50,5 +53,32 @@ export class EmotionalRecordController {
     const { sub } = req.user as PayloadToken;
 
     return await this.dailyRecord.createDailyRecord(dailyRecord, sub);
+  }
+
+  @Get('daily')
+  @ApiOperation({ summary: 'Get daily records' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number, default value 0',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit of records per page, default value 10',
+  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Daily records found' })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Daily records not found',
+  })
+  async getDailyRecords(
+    @Req() req: Request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const { sub } = req.user as PayloadToken;
+
+    return await this.dailyRecord.getDailyRecordsByUserId(sub, page, limit);
   }
 }
