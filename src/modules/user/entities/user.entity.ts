@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from './enums/role.enum';
+import { DailyRecord } from 'src/modules/emotional-record/entities/dailyRecord.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -40,6 +42,9 @@ export class User {
 
   @Column({ type: 'date', name: 'birth_date' })
   birthDate: Date;
+
+  @OneToMany(() => DailyRecord, (dailyRecord) => dailyRecord.user)
+  dailyRecords: DailyRecord[];
 
   @CreateDateColumn()
   createdAt: Date;

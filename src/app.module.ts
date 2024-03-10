@@ -7,6 +7,7 @@ import { getDatabaseConfig } from './configs/dbConfig';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmotionModule } from './modules/emotion/emotion.module';
+import { EmotionalRecordModule } from './modules/emotional-record/emotionalRecord.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EmotionModule } from './modules/emotion/emotion.module';
     UserModule,
     AuthModule,
     EmotionModule,
+    EmotionalRecordModule,
   ],
   controllers: [AppController],
 })

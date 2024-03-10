@@ -34,7 +34,7 @@ export class PrimaryEmotionService {
       });
 
       if (!emotion) {
-        throw new NotFoundException('Emotion not found');
+        throw new NotFoundException(`Emotion ${name} not found`);
       }
 
       return emotion;
