@@ -32,6 +32,7 @@ export class UserService {
           lastName: true,
           email: true,
           mobileNumber: true,
+          birthDate: true,
         },
       });
 
