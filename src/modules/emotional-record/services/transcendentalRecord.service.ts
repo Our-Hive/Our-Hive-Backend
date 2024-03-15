@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateTranscendentalRecordRequestDto } from '../dtos/createTranscendentalRecord.request.dto';
 import { TranscendentalRecord } from '../entities/transcendentalRecord.entity';
@@ -49,6 +50,34 @@ export class TranscendentalRecordService {
       }
 
       return record;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  async getTranscendentalRecordsByUserId(
+    userId: number,
+    page: number = 0,
+    limit: number = 10,
+  ) {
+    try {
+      console.log('page, limit', page, limit);
+
+      const records = await this.recordRepository.find({
+        where: { user: userId },
+        order: { createdAt: 'DESC' },
+        skip: page * limit,
+        take: limit,
+      });
+
+      if (!records) {
+        throw new NotFoundException('Transcendental records not found');
+      }
+
+      return {
+        records,
+      };
     } catch (error) {
       console.error(error);
       throw error;
