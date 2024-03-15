@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { SecondaryEmotion } from './secondaryEmotion.entity';
 import { DailyRecord } from '../../emotional-record/entities/dailyRecord.entity';
+import { TranscendentalRecord } from '../../emotional-record/entities/trascandentalRecord.entity';
 
 @Entity({ name: 'primary_emotions' })
 export class PrimaryEmotion {
@@ -28,6 +29,12 @@ export class PrimaryEmotion {
 
   @OneToMany(() => DailyRecord, (dailyRecord) => dailyRecord.primaryEmotion)
   dailyRecords: DailyRecord[];
+
+  @OneToMany(
+    () => TranscendentalRecord,
+    (trascendentalRecord) => trascendentalRecord.primaryEmotion,
+  )
+  transcendentalRecords: TranscendentalRecord[];
 
   @CreateDateColumn()
   createdAt: Date;
