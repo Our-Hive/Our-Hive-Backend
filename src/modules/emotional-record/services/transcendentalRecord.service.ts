@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreateTranscendentalRecordRequestDto } from '../dtos/createTranscendentalRecord.request.dto';
 import { TranscendentalRecord } from '../entities/transcendentalRecord.entity';
@@ -71,13 +70,7 @@ export class TranscendentalRecordService {
         take: limit,
       });
 
-      if (!records) {
-        throw new NotFoundException('Transcendental records not found');
-      }
-
-      return {
-        records,
-      };
+      return records;
     } catch (error) {
       console.error(error);
       throw error;
