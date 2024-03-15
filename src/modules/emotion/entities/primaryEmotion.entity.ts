@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { SecondaryEmotion } from './secondaryEmotion.entity';
 import { DailyRecord } from '../../emotional-record/entities/dailyRecord.entity';
-import { TranscendentalRecord } from '../../emotional-record/entities/trascandentalRecord.entity';
+import { TranscendentalRecord } from 'src/modules/emotional-record/entities/transcendentalRecord.entity';
 
 @Entity({ name: 'primary_emotions' })
 export class PrimaryEmotion {

@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserRole } from './enums/role.enum';
 import { DailyRecord } from 'src/modules/emotional-record/entities/dailyRecord.entity';
-import { TranscendentalRecord } from '../../emotional-record/entities/trascandentalRecord.entity';
+import { TranscendentalRecord } from '../../emotional-record/entities/transcendentalRecord.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -49,7 +49,7 @@ export class User {
 
   @OneToMany(
     () => TranscendentalRecord,
-    (trascendentalRecord) => trascendentalRecord.user,
+    (transcendentalRecord) => transcendentalRecord.user,
   )
   transcendentalRecords: TranscendentalRecord[];
 

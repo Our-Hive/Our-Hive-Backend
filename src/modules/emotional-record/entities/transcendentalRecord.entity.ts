@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { PrimaryEmotion } from '../../emotion/entities/primaryEmotion.entity';
 import { SecondaryEmotion } from '../../emotion/entities/secondaryEmotion.entity';
 import { User } from '../../user/entities/user.entity';
@@ -34,4 +42,16 @@ export class TranscendentalRecord {
 
   @Column({ length: 255 })
   companion: string;
+
+  @Column({ type: 'timestamp' })
+  date: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
