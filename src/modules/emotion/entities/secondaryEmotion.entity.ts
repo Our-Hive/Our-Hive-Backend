@@ -10,6 +10,7 @@ import {
 import { PrimaryEmotion } from './primaryEmotion.entity';
 import { Theme } from './enums/theme.enum';
 import { DailyRecord } from 'src/modules/emotional-record/entities/dailyRecord.entity';
+import { TranscendentalRecord } from 'src/modules/emotional-record/entities/transcendentalRecord.entity';
 
 @Entity({ name: 'secondary_emotions' })
 export class SecondaryEmotion {
@@ -37,6 +38,12 @@ export class SecondaryEmotion {
 
   @OneToMany(() => DailyRecord, (dailyRecord) => dailyRecord.secondaryEmotion)
   dailyRecords: DailyRecord[];
+
+  @OneToMany(
+    () => TranscendentalRecord,
+    (trascendentalRecord) => trascendentalRecord.secondaryEmotion,
+  )
+  transcendentalRecords: TranscendentalRecord[];
 
   @CreateDateColumn()
   createdAt: Date;

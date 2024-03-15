@@ -22,6 +22,8 @@ import {
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt.guard';
 import { Request } from 'express';
 import { PayloadToken } from 'src/modules/auth/models/token.model';
+import { CreateTranscendentalRecordRequestDto } from '../dtos/createTranscendentalRecord.request.dto';
+import { TranscendentalRecordService } from '../services/transcendentalRecord.service';
 
 @ApiTags('emotional records')
 @ApiBearerAuth('JWT')
@@ -29,7 +31,10 @@ import { PayloadToken } from 'src/modules/auth/models/token.model';
 @ApiHeader({ name: 'Authorization', description: 'Auth token' })
 @Controller('emotional-records')
 export class EmotionalRecordController {
-  constructor(private readonly dailyRecord: DailyRecordService) {}
+  constructor(
+    private readonly dailyService: DailyRecordService,
+    private readonly transcendentalService: TranscendentalRecordService,
+  ) {}
 
   @ApiOperation({ summary: 'Create daily record' })
   @ApiResponse({
@@ -52,7 +57,7 @@ export class EmotionalRecordController {
   ) {
     const { sub } = req.user as PayloadToken;
 
-    return await this.dailyRecord.createDailyRecord(dailyRecord, sub);
+    return await this.dailyService.createDailyRecord(dailyRecord, sub);
   }
 
   @Get('daily')
@@ -79,6 +84,33 @@ export class EmotionalRecordController {
   ) {
     const { sub } = req.user as PayloadToken;
 
-    return await this.dailyRecord.getDailyRecordsByUserId(sub, page, limit);
+    return await this.dailyService.getDailyRecordsByUserId(sub, page, limit);
+  }
+
+  @Post('transcendental')
+  @ApiOperation({ summary: 'Create transcendental record' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Transcendental record created',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Primary emotion not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid secondary emotion for primary emotion',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async createTranscendentalRecord(
+    @Req() req: Request,
+    @Body() transcendentalRecord: CreateTranscendentalRecordRequestDto,
+  ) {
+    const { sub } = req.user as PayloadToken;
+
+    return await this.transcendentalService.createTranscendentalRecord(
+      transcendentalRecord,
+      sub,
+    );
   }
 }
