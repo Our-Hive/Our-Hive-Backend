@@ -60,32 +60,19 @@ export class DailyRecordService {
     limit: number = 10,
   ) {
     try {
-      const [dailyRecords] = await this.dailyRecordRepository.findAndCount({
+      const records = await this.dailyRecordRepository.findAndCount({
         where: { user: userId },
         order: { createdAt: 'DESC' },
         skip: page * limit,
-        take: limit + 1,
+        take: limit,
       });
 
-      if (!dailyRecords) {
+      if (!records) {
         throw new NotFoundException('Daily records not found');
       }
 
-      let nextPage: number = null;
-
-      if (dailyRecords.length === limit + 1) {
-        nextPage = page + 1;
-        dailyRecords.pop(); // Remove the extra record
-      }
-
-      const previousPage = page > 0 ? page - 1 : null;
-
       return {
-        dailyRecords,
-        paging: {
-          previous: previousPage,
-          next: nextPage,
-        },
+        records,
       };
     } catch (error) {
       console.error(error);
