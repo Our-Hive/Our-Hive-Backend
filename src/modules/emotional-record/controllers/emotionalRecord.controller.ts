@@ -113,4 +113,38 @@ export class EmotionalRecordController {
       sub,
     );
   }
+
+  @Get('transcendental')
+  @ApiOperation({ summary: 'Get transcendental records' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number, default value 0',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit of records per page, default value 10',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Transcendental records found',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Transcendental records not found',
+  })
+  async getTranscendentalRecords(
+    @Req() req: Request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const { sub } = req.user as PayloadToken;
+
+    return await this.transcendentalService.getTranscendentalRecordsByUserId(
+      sub,
+      page,
+      limit,
+    );
+  }
 }
