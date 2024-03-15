@@ -7,6 +7,7 @@ import { PrimaryEmotion } from '../emotion/entities/primaryEmotion.entity';
 import { EmotionalRecordController } from './controllers/emotionalRecord.controller';
 import { TranscendentalRecordService } from './services/transcendentalRecord.service';
 import { TranscendentalRecord } from './entities/transcendentalRecord.entity';
+import { RecordService } from './services/record.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TranscendentalRecord } from './entities/transcendentalRecord.entity';
     ]),
   ],
   providers: [
+    RecordService,
     DailyRecordService,
     PrimaryEmotionService,
     TranscendentalRecordService,

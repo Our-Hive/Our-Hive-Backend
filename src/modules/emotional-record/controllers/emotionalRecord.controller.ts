@@ -24,6 +24,7 @@ import { Request } from 'express';
 import { PayloadToken } from 'src/modules/auth/models/token.model';
 import { CreateTranscendentalRecordRequestDto } from '../dtos/createTranscendentalRecord.request.dto';
 import { TranscendentalRecordService } from '../services/transcendentalRecord.service';
+import { RecordService } from '../services/record.service';
 
 @ApiTags('emotional records')
 @ApiBearerAuth('JWT')
@@ -32,9 +33,33 @@ import { TranscendentalRecordService } from '../services/transcendentalRecord.se
 @Controller('emotional-records')
 export class EmotionalRecordController {
   constructor(
+    private readonly recordService: RecordService,
     private readonly dailyService: DailyRecordService,
     private readonly transcendentalService: TranscendentalRecordService,
   ) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Get all records' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number, default value 0',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit of records per page, default value 10',
+  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Records found' })
+  async getAllRecords(
+    @Req() req: Request,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    const { sub } = req.user as PayloadToken;
+
+    return await this.recordService.getAllRecordsByUserId(sub, page, limit);
+  }
 
   @ApiOperation({ summary: 'Create daily record' })
   @ApiResponse({
@@ -73,10 +98,6 @@ export class EmotionalRecordController {
     description: 'Limit of records per page, default value 10',
   })
   @ApiResponse({ status: HttpStatus.OK, description: 'Daily records found' })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Daily records not found',
-  })
   async getDailyRecords(
     @Req() req: Request,
     @Query('page') page: number,
@@ -129,10 +150,6 @@ export class EmotionalRecordController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Transcendental records found',
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Transcendental records not found',
   })
   async getTranscendentalRecords(
     @Req() req: Request,

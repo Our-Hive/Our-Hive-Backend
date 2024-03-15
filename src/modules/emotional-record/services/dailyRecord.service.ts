@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -60,20 +59,14 @@ export class DailyRecordService {
     limit: number = 10,
   ) {
     try {
-      const records = await this.dailyRecordRepository.findAndCount({
+      const records = await this.dailyRecordRepository.find({
         where: { user: userId },
         order: { createdAt: 'DESC' },
         skip: page * limit,
         take: limit,
       });
 
-      if (!records) {
-        throw new NotFoundException('Daily records not found');
-      }
-
-      return {
-        records,
-      };
+      return records;
     } catch (error) {
       console.error(error);
       throw error;
